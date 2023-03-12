@@ -35,9 +35,7 @@ const absoluteSceneDir = [
   sceneArg,
 ].join(path.sep);
 
-const outBase =
-  process.env.OUTPUT_DIR ||
-  resolve(process.cwd(), ["..", "..", "output"].join(path.sep));
+const outBase = process.env.OUTPUT_DIR || resolve(process.cwd(), "output");
 
 const sceneName = absoluteSceneDir.replace(/^.*\/(.*)/, "$1");
 
@@ -86,14 +84,14 @@ const run = async () => {
   }
 
   for (const frame of scene) {
-    frame.sharp.toFile(
+    await frame.sharp.toFile(
       [sceneOutputFramesDir, `frame_${frame.frame}.png`].join(path.sep)
     );
   }
 
   // build video file
   anonLog(`Building video file for scene ${sceneName}`);
-  const makeMp3 = shell([
+  const makeSceneVideo = shell([
     pathToFfmpeg,
     "-y",
     "-s",
@@ -110,9 +108,8 @@ const run = async () => {
     "veryslow",
     [sceneOutputDir, `${sceneName}.mkv`].join(path.sep),
   ]);
-  console.log(makeMp3);
   await new Promise((resolve, reject) => {
-    exec(makeMp3, (err, stdout, stderr) => {
+    exec(makeSceneVideo, (err, stdout, stderr) => {
       if (err) {
         anonLog("Error converting files to video file", stderr);
         reject(err);
