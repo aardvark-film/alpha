@@ -1,0 +1,22 @@
+name: Build Media
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - "**"
+    paths:
+      - "media/*"
+
+jobs:
+  build_media:
+    name: Build Media
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: yarn
+      - name: Build tools
+        run: yarn build

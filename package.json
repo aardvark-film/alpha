@@ -1,0 +1,13 @@
+{
+  "name": "frames",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build-scene": "node projects/cli/build/index.js",
+    "build": "yarn workspace frames-sdk build && yarn workspace frames-cli build"
+  },
+  "workspaces": [
+    "projects/*"
+  ]
+}

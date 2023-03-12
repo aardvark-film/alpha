@@ -1,0 +1,32 @@
+{
+  "name": "frames-sdk",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@nouns/sdk": "^0.4.0",
+    "ajv": "^8.12.0",
+    "compression": "^1.7.4",
+    "dotenv": "^16.0.3",
+    "moment": "^2.29.4",
+    "nodemon": "^2.0.20",
+    "ramda": "^0.28.0",
+    "sharp": "^0.31.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3",
+    "typescript-json-schema": "^0.55.0"
+  },
+  "scripts": {
+    "start": "nodemon --ignore data/ src/index.ts",
+    "test": "jest",
+    "build": "tsc",
+    "build-validation": "typescript-json-schema tsconfig.json '*' --include 'types/*'"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.3.1",
+    "@types/jest": "^29.4.0",
+    "@types/ramda": "^0.28.20",
+    "jest": "^29.3.1",
+    "ts-jest": "^29.0.3"
+  }
+}

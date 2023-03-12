@@ -1,0 +1,2 @@
+media/scenes/* filter=lfs diff=lfs merge=lfs -text
+media/shared-art/* filter=lfs diff=lfs merge=lfs -text
