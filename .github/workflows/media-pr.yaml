@@ -22,6 +22,7 @@ jobs:
   comment_on_pr:
     name: Comment on PR
     runs-on: "ubuntu-latest"
+    needs: ["build_media"]
     permissions:
       pull-requests: write
     steps:
