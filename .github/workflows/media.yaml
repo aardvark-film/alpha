@@ -13,10 +13,16 @@ on:
 jobs:
   build_media:
     name: Build Media
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "dailies"]
     steps:
       - uses: actions/checkout@v2
+      - name: Cleanup output
+        run: rm -rf output
       - name: Install dependencies
         run: yarn
       - name: Build tools
         run: yarn build
+      - name: Build media
+        run: ./build.sh
+      - name: Copy to Dailies
+        run: cp -r output /mnt/dailies/${{ github.sha }}
