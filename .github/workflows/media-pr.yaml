@@ -1,19 +1,14 @@
-name: Build Media
+name: Build Media for PR
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - "**"
-    paths:
-      - "media/*"
 
 jobs:
   build_media:
     name: Build Media
     runs-on: ["self-hosted", "dailies"]
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v2
       - name: Cleanup output
@@ -26,3 +21,8 @@ jobs:
         run: ./build.sh
       - name: Copy to Dailies
         run: cp -r output /mnt/dailies/output/alpha/${{ github.sha }}
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            Hooray! Your dailies are available at:
+            https://dailies.devcarrot.wtf/alpha/${{ github.sha }}
