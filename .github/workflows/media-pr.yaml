@@ -7,8 +7,6 @@ jobs:
   build_media:
     name: Build Media
     runs-on: ["self-hosted", "dailies"]
-    permissions:
-      pull-requests: write
     steps:
       - uses: actions/checkout@v2
       - name: Cleanup output
@@ -21,6 +19,12 @@ jobs:
         run: ./build.sh
       - name: Copy to Dailies
         run: cp -r output /mnt/dailies/output/alpha/${{ github.sha }}
+  comment_on_pr:
+    name: Comment on PR
+    runs-on: "ubuntu-latest"
+    permissions:
+      pull-requests: write
+    steps:
       - uses: mshick/add-pr-comment@v2
         with:
           message: |
