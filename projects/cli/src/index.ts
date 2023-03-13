@@ -106,6 +106,7 @@ const run = async () => {
     "0",
     "-preset",
     "veryslow",
+    [sceneOutputDir, `${sceneName}.mp4`].join(path.sep),
     [sceneOutputDir, `${sceneName}.mkv`].join(path.sep),
   ]);
   await new Promise((resolve, reject) => {

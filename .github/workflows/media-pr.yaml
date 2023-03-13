@@ -1,14 +1,7 @@
-name: Build Media
+name: Build Media for PR
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - "**"
-    paths:
-      - "media/*"
 
 jobs:
   build_media:
@@ -26,3 +19,15 @@ jobs:
         run: ./build.sh
       - name: Copy to Dailies
         run: cp -r output /mnt/dailies/output/alpha/${{ github.sha }}
+  comment_on_pr:
+    name: Comment on PR
+    runs-on: "ubuntu-latest"
+    needs: ["build_media"]
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            Hooray! Your dailies are available at:
+            https://dailies.devcarrot.wtf/alpha/${{ github.sha }}
