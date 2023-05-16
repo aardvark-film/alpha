@@ -3,4 +3,5 @@ export const constants = {
     width: 96,
     height: 54,
   },
+  frameRate: 30,
 };
