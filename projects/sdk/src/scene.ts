@@ -2,15 +2,18 @@ import { map, max, prop, range, reduce } from "ramda";
 import * as sharp from "sharp";
 import { Image } from "types";
 import { constants } from "./constants";
+import { anonLog } from "./util";
 
 export type FrameOptions = {
   height: number;
   width: number;
+  frameRate: number;
 };
 
 const defaultFrameOptions: FrameOptions = {
   height: constants.canvas.height,
   width: constants.canvas.width,
+  frameRate: constants.frameRate,
 };
 
 export const buildEmptyFrames = (
@@ -61,27 +64,33 @@ export const buildScene = async (
   options: Partial<SceneOptions> = {}
 ) => {
   options = { ...defaultSceneOptions, ...options };
+  anonLog(`Building scene for ${images.length} image(s)`);
   // Build empty frames
-  let frames = buildEmptyFrames(
-    highestFrameNumber(images) + 1,
-    options.frameOptions
-  );
+  const emptyFrameLength = highestFrameNumber(images) + 1;
+  anonLog(`Attempting to build empty frames for ${emptyFrameLength} frame(s)`);
+  let frames = buildEmptyFrames(emptyFrameLength, options.frameOptions);
+  anonLog(`Built empty frames, building frame map`);
   const frameMap = buildFrameMap(images);
   // Add images to frames
   frames = await Promise.all(
     frames.map(async (frame, frameId) => {
+      anonLog(`Adding images for frame ${frameId}`);
       const composites = (
         await Promise.all(
-          map(
-            async (image: Image) => ({
+          map(async (image: Image) => {
+            anonLog(`Generating sharp buffer for ${image.filename.fullName}`);
+            const sharpBuffer = await image.sharp.toBuffer();
+            anonLog(
+              `Adding image ${image.filename.fullName} to frame ${frameId} as layer ${image.filename.layer}`
+            );
+            return {
               layer: image.filename.layer,
               composite: {
-                input: await image.sharp.toBuffer(),
+                input: sharpBuffer,
                 gravity: options.layerGravity,
               },
-            }),
-            frameMap[frameId]
-          )
+            };
+          }, frameMap[frameId])
         )
       )
         .sort((a, b) => a.layer - b.layer)

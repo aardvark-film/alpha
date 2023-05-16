@@ -16,8 +16,9 @@ import { exec } from "child_process";
 printDangerWarning();
 
 const frameOptions: FrameOptions = {
-  height: 54,
-  width: 96,
+  height: 108,
+  width: 192,
+  frameRate: 30,
 };
 
 const sceneArg = process.argv[2];
@@ -51,7 +52,9 @@ const run = async () => {
 
   const images: Image[] = [];
   for (let file of pipe(validFileFilter)(readdirSync(absoluteSceneDir))) {
-    const image = await loadFile([absoluteSceneDir, file].join(path.sep));
+    const absoluteFilePath = [absoluteSceneDir, file].join(path.sep);
+    anonLog(`Loading file ${absoluteFilePath}`);
+    const image = await loadFile(absoluteFilePath);
     images.push(image);
     anonLog(`Loaded ${file}`);
   }
@@ -97,7 +100,7 @@ const run = async () => {
     "-s",
     `${frameOptions.width}x${frameOptions.height}`,
     "-r",
-    "30",
+    frameOptions.frameRate,
     "-i",
     [sceneOutputFramesDir, "frame_%d.png"].join(path.sep),
     "-c:v",
