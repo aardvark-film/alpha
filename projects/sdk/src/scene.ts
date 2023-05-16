@@ -40,7 +40,11 @@ export const highestFrameNumber = reduce<Image, number>(
 export const buildFrameMap = reduce<Image, Map<number, Image[]>>(
   (acc, image) => {
     const { start, end } = image.filename.frame;
+    anonLog(
+      `Adding ${image.filename.fullName} to frameMap with range ${start}, ${end}`
+    );
     for (let frameId of range(start, end + 1)) {
+      anonLog(`Adding ${frameId} (${image.filename.fullName}) to frameMap`);
       if (acc[frameId] === undefined) acc[frameId] = [];
       acc[frameId].push(image);
     }
